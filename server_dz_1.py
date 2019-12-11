@@ -8,7 +8,7 @@ class ServerProtocol(LineOnlyReceiver):
     login: str = None
 
     def connectionMade(self):
-        # Потенциальный баг для внимательных =)
+       
         self.factory.clients.append(self)
 
     def connectionLost(self, reason=connectionDone):
@@ -31,7 +31,8 @@ class ServerProtocol(LineOnlyReceiver):
                 if login in logins:
                     error = f"{login} already exists!"
                     self.sendLine(error.encode())
-                    login = None
+                    self.transport.loseConnection()
+                    #login = None если не отключать, а дать возможность ввести новой логин
                 else:
                     self.login = login
                     self.sendLine("Welcome!".encode())
